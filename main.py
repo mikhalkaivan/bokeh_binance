@@ -12,7 +12,7 @@ import bn
 SYMBOL_ONE = 'BTC'
 SYMBOL_TWO = 'USDT'
 PERIOD = '1 day ago UTC'
-TIMEDELTA = '1h'
+TIMEDELTA = '15m'
 
 def get_data(symbol_1,symbol_2,interval,start):
     frame = bn.get_data(symbol_1,symbol_2,interval,start)
@@ -21,7 +21,7 @@ def get_data(symbol_1,symbol_2,interval,start):
     for time in raw_times.unique():
         readable = datetime.fromtimestamp(int(time / 1000))
         times.append(readable)
-    volumes = frame[7]
+    volumes = frame[5]
     data = dict(
         time = times,
         volume = volumes
@@ -67,8 +67,8 @@ def get_plot_volume(source):
 def update(attr,old,new):
     symbol_1 = dropdown_symbol_one.value
     symbol_2 = dropdown_symbol_two.value
-    interval = dropdown_histdata.value
-    start = dropdown_timedelta.value
+    start = dropdown_histdata.value
+    interval = dropdown_timedelta.value
     datasource = get_data(symbol_1,symbol_2,interval,start)
     source.data = datasource.data
 

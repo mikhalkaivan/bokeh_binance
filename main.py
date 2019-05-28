@@ -2,11 +2,12 @@ from bokeh.plotting import figure
 from bokeh.layouts import row, column
 from bokeh.io import curdoc
 from bokeh.models import ColumnDataSource, HoverTool, DatetimeTickFormatter, NumeralTickFormatter
-from bokeh.models.tools import RedoTool,RangeTool,UndoTool,EditTool,HelpTool,ResetTool,SaveTool,FreehandDrawTool,PointDrawTool,ZoomInTool,ZoomOutTool,WheelZoomTool,WheelPanTool
+from bokeh.models.tools import RedoTool,RangeTool,UndoTool,EditTool,HelpTool,ResetTool,SaveTool,FreehandDrawTool,ZoomInTool,ZoomOutTool,WheelZoomTool,WheelPanTool
 from bokeh.models.widgets import Dropdown, MultiSelect
 from datetime import datetime
 import math
 import bn
+import pandas as pd
 
 
 SYMBOL_ONE = 'BTC'
@@ -17,14 +18,25 @@ TIMEDELTA = '15m'
 def get_data(symbol_1,symbol_2,interval,start):
     frame = bn.get_data(symbol_1,symbol_2,interval,start)
     times = []
+    stringtimes = []
     raw_times = frame[0]
+    open = frame[1]
+    high = frame[2]
+    low = frame[3]
+    close = frame[4]
     for time in raw_times.unique():
         readable = datetime.fromtimestamp(int(time / 1000))
         times.append(readable)
+        stringtimes.append(readable.strftime("%Y-%m-%d %H:%M:%S"))
     volumes = frame[5]
     data = dict(
         time = times,
-        volume = volumes
+        volume = volumes,
+        stringtime = stringtimes,
+        open = open,
+        high = high,
+        low = low,
+        close = close
     )
     source = ColumnDataSource(data)
     return source
@@ -33,17 +45,16 @@ def get_data(symbol_1,symbol_2,interval,start):
 def get_plot_volume(source):
     hover = HoverTool(
         tooltips=[
-            ('time', '@date{"%Y-%m-%d %H:%M:%S"}'),
+            ('time', '@time{%Y-%m-%d %H:%M:%S}'),
             ('volume', '@volume{0.00 a}')
         ],
         formatters={'time':'datetime'},
         mode='vline'
     )
-    p = figure(title="Cryptocurrencies volume trading", x_axis_label="Время", y_axis_label="Volume from",x_axis_type="datetime", plot_width=600, plot_height=550)
+    p = figure(title="Cryptocurrencies volume trading", x_axis_label="Время", y_axis_label="Volume from",x_axis_type="datetime", plot_width=1000, plot_height=550)
     p.tools.append(hover)
     p.tools.append(RedoTool())
     p.tools.append(UndoTool())
-    p.tools.append(PointDrawTool())
     p.tools.append(ZoomOutTool())
     p.tools.append(ZoomInTool())
     p.tools.append(WheelPanTool())
@@ -51,16 +62,9 @@ def get_plot_volume(source):
     p.title.align = "center"
     p.title.text_font_size = "25px"
     p.yaxis.formatter = NumeralTickFormatter(format="0.00 a")
-    p.xaxis.formatter = DatetimeTickFormatter(
-        minutes=['%Mm'],
-        hours=['%Hh'],
-        days=['%m/%d'],
-        months=['%m/%Y'],
-        years=['%Y']
-    )
     p.xaxis.major_label_orientation = math.pi / 4
-    line = p.line(x="time", y="volume", source=source, line_width=2, color="red", legend="volume trading")
-    p.tools.append(FreehandDrawTool(renderers=[line]))
+    p.line(x="time", y="volume", source=source, line_width=2, color="red", legend="volume trading")
+    p.segment("time","high","time","low",color="black", source=source)
     return p
 
 
@@ -90,7 +94,7 @@ source = get_data(SYMBOL_ONE,SYMBOL_TWO,TIMEDELTA,PERIOD)
 plot_volumefrom = get_plot_volume(source)
 
 widgets = column(dropdown_symbol_one,dropdown_symbol_two,dropdown_histdata,dropdown_timedelta)
-image = column(row(plot_volumefrom))
+image = column(plot_volumefrom)
 
 curdoc().add_root(row(widgets,image))
 curdoc().title = "Plot"

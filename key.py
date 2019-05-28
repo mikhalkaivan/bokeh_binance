@@ -1,0 +1,2 @@
+api_key = 'loDMFZ41utzUfyjogjwmmjVr4fS410PRLEk8NUdmQ0Ogb5VV7LLrVCXqNF1ZDHSh'
+api_secret = 'hc8pMVUQ93vFJt4FjAlQzsZCsI0y1c6MBOK97S0vybAY0FoFRpIqIJr5ENdNpzGg'

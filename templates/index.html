@@ -1,0 +1,32 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" rel="stylesheet" type="text/css">
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.css" rel="stylesheet" type="text/css">
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
+    {{ js_resources|indent(4)|safe }}
+    {{ css_resources|indent(4)|safe }}
+</head>
+<body>
+<H1>Iris Histogram</H1>
+
+<form action="/">
+<select name="t">
+	{% for delta in deltas %}
+		{% if delta == timedelta %}
+			<option selected value="{{ delta }}">{{ delta }}</option>
+		{% else %}
+			<option value="{{ delta }}">{{ delta }}</option>
+		{% endif %}
+	{% endfor %}
+</select>
+<input type="submit">
+</form>
+
+{{ script|indent(4)|safe }}
+{{ div|indent(4)|safe }}
+
+</body>
+</html>

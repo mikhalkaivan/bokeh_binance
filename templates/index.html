@@ -33,7 +33,18 @@
     </select>
 <input type="submit">
 </form>
-
+<form action="/">
+    <select name="p">
+        {% for per in periodes %}
+            {% if per == period %}
+                <option selected value="{{ per }}">{{ per }}</option>
+            {% else %}
+                <option value="{{ per }}">{{ per }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+<input type="submit">
+</form>
 {{ script|indent(4)|safe }}
 {{ div|indent(4)|safe }}
 

@@ -10,18 +10,27 @@
     {{ css_resources|indent(4)|safe }}
 </head>
 <body>
-<H1>Iris Histogram</H1>
+<H1>Cruptocurrency price</H1>
 
 <form action="/">
-<select name="t">
-	{% for delta in deltas %}
-		{% if delta == timedelta %}
-			<option selected value="{{ delta }}">{{ delta }}</option>
-		{% else %}
-			<option value="{{ delta }}">{{ delta }}</option>
-		{% endif %}
-	{% endfor %}
-</select>
+    <select name="t">
+        {% for delta in deltas %}
+            {% if delta == timedelta %}
+                <option selected value="{{ delta }}">{{ delta }}</option>
+            {% else %}
+                <option value="{{ delta }}">{{ delta }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <select name="p">
+        {% for per in periodes %}
+            {% if per == period %}
+                <option selected value="{{ per }}">{{ per }}</option>
+            {% else %}
+                <option value="{{ per }}">{{ per }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
 <input type="submit">
 </form>
 

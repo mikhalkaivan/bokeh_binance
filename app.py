@@ -16,6 +16,7 @@ app = Flask(__name__)
 
 
 deltas = ['1h','15m','5m']
+periodes = ['1 day ago UTC','1 hour ago UTC','30 min ago UTC']
 
 def get_plot(x,y):
     p = figure(plot_width=500,plot_height=500)
@@ -26,9 +27,12 @@ def get_plot(x,y):
 @app.route('/')
 def index():
     timedelta = request.args.get('t')
+    period = request.args.get('p')
     if timedelta == None:
         timedelta = '1h'
-    d = data.get_data(SYMBOL_ONE,SYMBOL_TWO,timedelta,PERIOD)
+    if period == None:
+        period = '1 day ago UTC'
+    d = data.get_data(SYMBOL_ONE,SYMBOL_TWO,timedelta,period)
     plot = get_plot(d[0],d[1])
     script,div = components(plot)
     js_resources = INLINE.render_js()
